@@ -1,9 +1,22 @@
 var taskService = new TaskService();
-// getEle
+var valid = new Validation();
 function getEle(id) {
     return document.getElementById(id);
 }
+var loader = false;
+function checkLoader(){
+    if(loader){
+        getEle('loader').style.display = 'block';
+    }
+    else{
+        getEle('loader').style.display = 'none';
+    }
+}
+
+
 var getTasks = function () {
+    loader = true;
+    checkLoader();
     taskService.getTasksAPI()
         .then(function (res) {
             renderTasks(res.data);
@@ -13,11 +26,13 @@ var getTasks = function () {
             alert(err);
         });
 };
-getTasks();
-var addTasks = function () {
+
+getEle('addItem').addEventListener('click', function (){
     var taskName = getEle('newTask').value;
     var status = 'todo';
     var task = new Task(taskName, status);
+    loader = true;
+    checkLoader();
     taskService.addTasksAPI(task)
         .then(function (res) {
             alert('Add Task Success');
@@ -26,8 +41,10 @@ var addTasks = function () {
             // Error
             alert(err);
         });
-}
+})
 var deleteTasks = function(taskId){
+    loader = true;
+    checkLoader();
     taskService.deleteTasksAPI()
     .then(function (res) {
         alert('Delete Task Success');
@@ -37,35 +54,35 @@ var deleteTasks = function(taskId){
         alert(err);
     });
 }
-var renderTaskList = function (taskList) {
+var renderTasks = function (taskService) {
     var taskToDo = '';
     var taskComplete = '';
-    taskList.forEach(function (task) {
+    taskService.forEach(function (task) {
         if (task.status == 'todo') {
             taskToDo +=
                 `
                 <li>
                     <span>${task.taskName}</span>
                     <div class="buttons">
-                        <button class = "remove" onclick = "deleteTasks('${task.taskName}')">
+                        <button class = "remove" onclick = "deleteTasks('${task.id}')">
                             <i class="fa fa-trash-alt"></i>
                         </button>
-                        <button class = "complete" onclick = "updateStatus('${task.taskName}')">
+                        <button class = "complete" onclick = "updateStatus('${task.id}')">
                             <i class="far fa-check-circle"></i>
                         </button>
                     </div>
                 </li>
-            `;
+            `
         } else {
             taskComplete +=
                 `
                 <li>
                     <span>${task.taskName}</span>
                     <div class="buttons">
-                        <button class = "remove" onclick = "deleteTasks('${task.taskName}')">
+                        <button class = "remove" onclick = "deleteTasks('${task.id}')">
                             <i class="fa fa-trash-alt"></i>
                         </button>
-                        <button class = "complete" onclick = "updateStatus('${task.taskName}')">
+                        <button class = "complete" onclick = "updateStatus('${task.id}')">
                             <i class="fas fa-check-circle"></i>
                         </button>
                     </div>
@@ -78,8 +95,10 @@ var renderTaskList = function (taskList) {
 };
 
 function updateStatus(taskId) {
-    taskList.updateTask(taskId);
-    renderTaskList(taskList.arr);
+    loader = true;
+    checkLoader();
+    taskService.updateTask(taskId);
+    renderTasks(taskService.arr);
     setLocalStorage();
 };
 function setLocalStorage(listProduct) {
