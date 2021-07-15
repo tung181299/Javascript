@@ -12,8 +12,7 @@ function checkLoader(){
         getEle('loader').style.display = 'none';
     }
 }
-
-
+checkLoader();
 var getTasks = function () {
     loader = true;
     checkLoader();
@@ -30,6 +29,7 @@ var getTasks = function () {
 getEle('addItem').addEventListener('click', function (){
     var taskName = getEle('newTask').value;
     var status = 'todo';
+    if (!validateInput(taskName)) return;
     var task = new Task(taskName, status);
     loader = true;
     checkLoader();
@@ -93,7 +93,12 @@ var renderTasks = function (taskService) {
     getEle('todo').innerHTML = taskToDo;
     getEle('complete').innerHTML = taskComplete;
 };
-
+var validateInput = function (taskName) {
+    var isValid = true;
+    isValid &= valid.kiemTraRong(taskName, 'notiInput', 'Please Input Your Task!!') &&
+        valid.kiemTraTrung(taskName, 'notiInput', 'Task Already Exists!!');
+    return isValid;
+};
 function updateStatus(taskId) {
     loader = true;
     checkLoader();

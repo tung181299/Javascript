@@ -1,3 +1,4 @@
+
 function Validation() {
     this.kiemTraRong = function(value, spanId, mess) {
         if (value === '') {
@@ -12,7 +13,7 @@ function Validation() {
     };
 
     this.kiemTraTrung = function(value, spanId, mess) {
-        if (taskList.findIndex(value) !== -1) {
+        if (taskService.findIndex(value) !== -1) {
             getEle(spanId).style.display = 'block';
             getEle(spanId).innerHTML = mess;
             return false;
