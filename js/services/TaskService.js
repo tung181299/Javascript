@@ -1,11 +1,5 @@
 function TaskService() {}
-TaskService.prototype.findIndex = function(name)
-{
-    return this.arr.findIndex(function(task)
-    {
-        return name.toLowerCase() == task.taskName.toLowerCase();
-    })
-};
+
 TaskService.prototype.getTasksAPI = function(){
     return axios({
         url:'https://60e024146b689e001788c90a.mockapi.io/ToDoList',
