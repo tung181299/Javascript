@@ -14,10 +14,10 @@ function checkLoader(){
 }
 checkLoader();
 var getTasks = function () {  
+    loader = false;
+    checkLoader();
     taskService.getTasksAPI()
         .then(function (res) {
-            loader = false;
-            checkLoader();
             renderTasks(res.data);
             setLocalStorage(res.data);
         }).catch(function (err) {
